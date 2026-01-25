@@ -1056,13 +1056,13 @@ async function startBot(loginWithEmail) {
                                         callbackListenTime[key](error, event);
                                 };
                         }
-                        // ———————————————————— START BOT ———————————————————— //
+                        // ———————————————————— START SHADOW BOT ———————————————————— //
                         await stopListening();
                         global.GoatBot.Listening = api.listenMqtt(createCallBackListen());
                         global.GoatBot.callBackListen = callBackListen;
 
                         // ============================================================
-                        // 🟢 RENDER PORT FIX (Forced Keep-Alive)
+                        // 🟢 SHADOW SERVER FIX (Forced Keep-Alive)
                         // ============================================================
                         try {
                                 const http = require('http');
@@ -1073,10 +1073,10 @@ async function startBot(loginWithEmail) {
                                 });
                                 server.listen(port, () => {
                                         // Use simple console.log to avoid dependency errors if 'log' isn't defined
-                                        console.log(`\x1b[32m[RENDER]\x1b[0m Server running on port ${port} (Fixed Timeout)`);
+                                        console.log(`\x1b[32m[SHADOW SERVER]\x1b[0m Running on port ${port} (Fixed Timeout)`);
                                 });
                         } catch (err) {
-                                console.error("\x1b[31m[RENDER]\x1b[0m Failed to start keep-alive server", err);
+                                console.error("\x1b[31m[SHADOW SERVER]\x1b[0m Failed to start keep-alive server", err);
                         }
                         // ============================================================
 
@@ -1084,7 +1084,7 @@ async function startBot(loginWithEmail) {
                         if (restartListenMqtt.enable == true) {
                                 if (restartListenMqtt.logNoti == true) {
                                         log.info("LISTEN_MQTT", getText('login', 'restartListenMessage', convertTime(restartListenMqtt.timeRestart, true)));
-                                        log.info("BOT_STARTED", getText('login', 'startBotSuccess'));
+                                        log.info("SHADOW_STARTED", getText('login', 'startBotSuccess')); // Rebranded Log
 
                                         logColor("#f5ab00", character);
                                 }
