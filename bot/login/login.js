@@ -61,19 +61,28 @@ function centerText(text, length) {
         // Print the padded string to the terminal
         console.log(paddedString);
 }
-console.log(`\x1b[1m\x1b[36m
-     ██████╗  ██╗  ██████╗ 
-     ██╔═══╝  ██║  ██╔══ ██╗
-     ██║       ██║  ██║    ██║
-     ██║       ██║  ██║   ██║
-     ╚██████╗ ██║  ██████╔╝
-      ╚═════╝ ╚═╝  ╚═════╝ 
-      
-    █▄▀ ▄▀█ █▀▀ █▀▀ █▄░█ █▀█
-    █░█ █▀█ █▄█ ██▄ █░▀█ █▄█
-    
-      === I AM ATOMIC ===
-\x1b[0m`);
+
+// logo
+const titles = [
+        [
+                "██████╗  ██████╗  █████╗ ████████╗    ██╗   ██╗██████╗",
+                "██╔════╝ ██╔═══██╗██╔══██╗╚══██╔══╝    ██║   ██║╚════██╗",
+                "██║  ███╗██║   ██║███████║   ██║       ██║   ██║ █████╔╝",
+                "██║   ██║██║   ██║██╔══██║   ██║       ╚██╗ ██╔╝██╔═══╝",
+                "╚██████╔╝╚██████╔╝██║  ██║   ██║        ╚████╔╝ ███████╗",
+                "╚═════╝  ╚═════╝ ╚═╝  ╚═╝   ╚═╝         ╚═══╝  ╚══════╝"
+        ],
+        [
+                "█▀▀ █▀█ ▄▀█ ▀█▀  █▄▄ █▀█ ▀█▀  █░█ ▀█",
+                "█▄█ █▄█ █▀█ ░█░  █▄█ █▄█ ░█░  ▀▄▀ █▄"
+        ],
+        [
+                "G O A T B O T  V 2 @" + currentVersion
+        ],
+        [
+                "GOATBOT V2"
+        ]
+];
 const maxWidth = process.stdout.columns;
 const title = maxWidth > 58 ?
         titles[0] :
@@ -1056,35 +1065,45 @@ async function startBot(loginWithEmail) {
                                         callbackListenTime[key](error, event);
                                 };
                         }
-                        // ———————————————————— START SHADOW BOT ———————————————————— //
+                        // ———————————————————— START BOT ———————————————————— //
                         await stopListening();
                         global.GoatBot.Listening = api.listenMqtt(createCallBackListen());
                         global.GoatBot.callBackListen = callBackListen;
-
-                        // ============================================================
-                        // 🟢 SHADOW SERVER FIX (Forced Keep-Alive)
-                        // ============================================================
-                        try {
+                        // ——————————————————— UPTIME ——————————————————— //
+                        if (global.GoatBot.config.serverUptime.enable == true && !global.GoatBot.config.dashBoard?.enable && !global.serverUptimeRunning) {
                                 const http = require('http');
-                                const port = process.env.PORT || 3000; // Render sets process.env.PORT automatically
-                                const server = http.createServer((req, res) => {
-                                        res.writeHead(200, { "Content-Type": "text/plain" });
-                                        res.end("Shadow Garden Active - Port Bound Successfully");
-                                });
-                                server.listen(port, () => {
-                                        // Use simple console.log to avoid dependency errors if 'log' isn't defined
-                                        console.log(`\x1b[32m[SHADOW SERVER]\x1b[0m Running on port ${port} (Fixed Timeout)`);
-                                });
-                        } catch (err) {
-                                console.error("\x1b[31m[SHADOW SERVER]\x1b[0m Failed to start keep-alive server", err);
+                                const express = require('express');
+                                const app = express();
+                                const server = http.createServer(app);
+                                const { data: html } = await axios.get("https://raw.githubusercontent.com/ntkhang03/resources-goat-bot/master/homepage/home.html");
+                                const PORT = global.GoatBot.config.dashBoard?.port || (!isNaN(global.GoatBot.config.serverUptime.port) && global.GoatBot.config.serverUptime.port) || 3001;
+                                app.get('/', (req, res) => res.send(html));
+                                app.get('/uptime', global.responseUptimeCurrent);
+                                let nameUpTime;
+                                try {
+                                        nameUpTime = `https://${process.env.REPL_OWNER ?
+                                                `${process.env.REPL_SLUG}.${process.env.REPL_OWNER}.repl.co` :
+                                                process.env.API_SERVER_EXTERNAL == "https://api.glitch.com" ?
+                                                        `${process.env.PROJECT_DOMAIN}.glitch.me` :
+                                                        `localhost:${PORT}`}`;
+                                        nameUpTime.includes('localhost') && (nameUpTime = nameUpTime.replace('https', 'http'));
+                                        await server.listen(PORT);
+                                        log.info("UPTIME", getText('login', 'openServerUptimeSuccess', nameUpTime));
+                                        if (global.GoatBot.config.serverUptime.socket?.enable == true)
+                                                require('./socketIO.js')(server);
+                                        global.serverUptimeRunning = true;
+                                }
+                                catch (err) {
+                                        log.err("UPTIME", getText('login', 'openServerUptimeError'), err);
+                                }
                         }
-                        // ============================================================
+
 
                         // ———————————————————— RESTART LISTEN ———————————————————— //
                         if (restartListenMqtt.enable == true) {
                                 if (restartListenMqtt.logNoti == true) {
                                         log.info("LISTEN_MQTT", getText('login', 'restartListenMessage', convertTime(restartListenMqtt.timeRestart, true)));
-                                        log.info("SHADOW_STARTED", getText('login', 'startBotSuccess')); // Rebranded Log
+                                        log.info("BOT_STARTED", getText('login', 'startBotSuccess'));
 
                                         logColor("#f5ab00", character);
                                 }
