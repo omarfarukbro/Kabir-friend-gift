@@ -30,6 +30,9 @@
   "envEvents": {
     "logsbot": {
       "allow": true
+    },
+    "shadow_notify": {
+      "allow": true
     }
   },
   "commandUnload": [

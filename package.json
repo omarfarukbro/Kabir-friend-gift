@@ -17,12 +17,12 @@
                 "child_process": "^1.0.2",
                 "connect-flash": "^0.1.1",
                 "cookie-parser": "^1.4.6",
+                "crypto": "^1.0.1",
                 "eta": "^1.12.3",
                 "express": "^4.18.1",
                 "express-fileupload": "^1.4.0",
                 "express-rate-limit": "^6.5.2",
                 "express-session": "^1.17.3",
-                "ws3-fca": "latest",
                 "form-data": "^4.0.0",
                 "fs": "^0.0.1-security",
                 "fs-extra": "^11.1.0",
@@ -51,6 +51,7 @@
                 "tinyurl": "^1.1.7",
                 "totp-generator": "^0.0.13",
                 "websocket-stream": "^5.5.2",
+                "ws3-fca": "latest",
                 "yt-search": "^2.13.1"
         },
         "scripts": {
