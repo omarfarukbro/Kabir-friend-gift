@@ -107,7 +107,7 @@ Then go to Render → **Manual Deploy** → **Clear Build Cache & Deploy**.
 ## 🧬 Credits
 
 * **Base Bot Core:** GoatBot V2 — NTKhang
-* **FCA Library:** NeoKex (extended fork with additional FCA support)
+* **FCA Library:** NeoKex + Ayanokojil (extended fork with additional FCA support)
 * **Fork & Enhancements:** Starboy Aphelion
 * **Theme & Concept:** CID Kageno — Shadow Garden
 
